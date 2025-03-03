@@ -22,12 +22,19 @@ with st.sidebar:
     st.image(image, use_container_width=True)
     st.markdown('<h2 style="color: green;">شرکت مهندسین مشاور آسمان برج کارون</h2>', unsafe_allow_html=True)
 
-# مقداردهی اولیه GEE
+import os
+import json
+import ee
 
-# # مقداردهی اولیه GEE
-service_account = "iman.e.bakhshipoor@gmail.com"
-credentials = ee.ServiceAccountCredentials(service_account, "IMAN_GEE.json")
-ee.Initialize(credentials)
+credentials_json = os.getenv("GEE_CREDENTIALS")
+
+if credentials_json:
+    with open("service_account.json", "w") as f:
+        f.write(credentials_json)
+
+    # احراز هویت در GEE
+    ee.Initialize(ee.ServiceAccountCredentials("", "service_account.json"))
+
 
 # آپلود فایل ZIP شامل Shapefile
 uploaded_file = st.file_uploader("آپلود یک شیپ فایل فشرده ‌شده (.zip)", type=["zip"])
